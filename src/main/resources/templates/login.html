@@ -3,39 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Arabica Warehouse Management</title>
-    <!-- PWA Settings -->
+    <title>Login — Arabica Warehouse</title>
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0C0604">
-    <link rel="apple-touch-icon" href="/images/logo.svg">
     <link rel="icon" type="image/svg+xml" href="/images/logo.svg">
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
                     colors: {
                         coffee: {
-                            50: '#FDFBF7',
-                            100: '#F3EFE9',
-                            200: '#E6DEC9',
-                            300: '#D5C4A1',
-                            400: '#B09874',
-                            500: '#8E704D',
-                            600: '#735238',
-                            700: '#5A3D2A',
-                            800: '#3D2518',
-                            900: '#1F100A',
-                            950: '#0C0604',
+                            50:'#FDFBF7',100:'#F3EFE9',200:'#E6DEC9',300:'#D5C4A1',
+                            400:'#B09874',500:'#8E704D',600:'#735238',700:'#5A3D2A',
+                            800:'#3D2518',900:'#1F100A',950:'#0C0604'
                         }
+                    },
+                    keyframes: {
+                        floatUp: { '0%,100%':{ transform:'translateY(0px)' }, '50%':{ transform:'translateY(-14px)' } },
+                        fadeIn:  { '0%':{ opacity:'0', transform:'translateY(16px)' }, '100%':{ opacity:'1', transform:'translateY(0)' } },
+                        spin3d:  { '0%':{ transform:'rotateY(0deg)' }, '100%':{ transform:'rotateY(360deg)' } }
+                    },
+                    animation: {
+                        floatUp: 'floatUp 6s ease-in-out infinite',
+                        fadeIn:  'fadeIn .6s ease both',
+                        'floatUp2': 'floatUp 9s ease-in-out infinite'
                     }
                 }
             }
@@ -44,121 +39,171 @@
     <style>
         body {
             background-color: #0c0604;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(142, 112, 77, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(31, 16, 10, 0.4) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(142, 112, 77, 0.05) 0px, transparent 80%);
+            background-image:
+                radial-gradient(ellipse at 10% 20%, rgba(142,112,77,.18) 0, transparent 55%),
+                radial-gradient(ellipse at 90% 80%, rgba(90,61,42,.25) 0, transparent 55%),
+                radial-gradient(ellipse at 50% 50%, rgba(142,112,77,.06) 0, transparent 80%);
         }
-        .glass-card {
-            background: rgba(31, 16, 10, 0.45);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        .glass {
+            background: rgba(31,16,10,.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,.07);
+            box-shadow: 0 20px 60px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.05);
         }
-        .glow-button {
-            box-shadow: 0 0 15px rgba(213, 196, 161, 0.2);
-            transition: all 0.3s ease;
+        .input-field {
+            background: rgba(12,6,4,.6);
+            border: 1px solid rgba(255,255,255,.08);
+            transition: all .3s;
         }
-        .glow-button:hover {
-            box-shadow: 0 0 25px rgba(213, 196, 161, 0.45);
-            transform: translateY(-1px);
+        .input-field:focus {
+            border-color: rgba(176,152,116,.6);
+            box-shadow: 0 0 0 3px rgba(142,112,77,.15);
+            outline: none;
+        }
+        .btn-glow {
+            box-shadow: 0 4px 20px rgba(142,112,77,.35);
+            transition: all .3s;
+        }
+        .btn-glow:hover {
+            box-shadow: 0 6px 28px rgba(176,152,116,.55);
+            transform: translateY(-2px);
+        }
+        .btn-glow:active { transform: translateY(0); }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: floatUp 6s ease-in-out infinite;
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4 overflow-hidden relative">
-    
-    <!-- Animated background glowing circles -->
-    <div class="absolute w-[300px] h-[300px] rounded-full bg-coffee-500/10 blur-[100px] top-10 left-10 animate-pulse"></div>
-    <div class="absolute w-[400px] h-[400px] rounded-full bg-coffee-800/20 blur-[120px] bottom-10 right-10 animate-pulse" style="animation-duration: 8s;"></div>
+<body class="flex items-center justify-center min-h-screen p-4 font-sans overflow-hidden relative">
 
-    <div class="w-full max-w-md z-10">
-        <!-- Brand identity -->
+    <!-- Floating ambient blobs -->
+    <div class="particle w-64 h-64 bg-coffee-500/10 blur-[80px] top-[-60px] left-[-40px]" style="animation-duration:7s"></div>
+    <div class="particle w-80 h-80 bg-coffee-800/15 blur-[100px] bottom-[-80px] right-[-40px]" style="animation-duration:10s; animation-delay:2s"></div>
+    <div class="particle w-40 h-40 bg-coffee-400/8 blur-[60px] top-1/2 left-1/3" style="animation-duration:8s; animation-delay:1s"></div>
+
+    <!-- Decorative coffee beans (SVG dots) -->
+    <div class="absolute top-10 right-20 opacity-10">
+        <i class="fa-solid fa-circle-dot text-coffee-400 text-6xl"></i>
+    </div>
+    <div class="absolute bottom-16 left-16 opacity-10">
+        <i class="fa-solid fa-circle-dot text-coffee-300 text-4xl"></i>
+    </div>
+
+    <div class="w-full max-w-md z-10" style="animation: fadeIn .7s ease both">
+        <!-- Brand -->
         <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-coffee-800 to-coffee-500 border border-coffee-400/20 shadow-xl mb-4">
-                <i class="fa-solid fa-mug-hot text-2xl text-coffee-100"></i>
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-coffee-700 via-coffee-500 to-coffee-800 border border-coffee-400/25 shadow-2xl mb-5 relative">
+                <i class="fa-solid fa-mug-hot text-3xl text-coffee-100"></i>
+                <span class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-green-500 border-2 border-coffee-950 flex items-center justify-center">
+                    <i class="fa-solid fa-check text-[7px] text-white"></i>
+                </span>
             </div>
             <h1 class="text-3xl font-extrabold tracking-tight text-white">ARABICA<span class="text-coffee-400">.CO</span></h1>
-            <p class="text-coffee-300/60 mt-2 font-medium">Warehouse Management System v2.0</p>
+            <p class="text-coffee-400/60 mt-1.5 text-sm font-medium">Warehouse Management System</p>
+            <div class="flex items-center justify-center gap-1.5 mt-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                <span class="text-[10px] text-green-400/70 font-semibold uppercase tracking-widest">System Online</span>
+            </div>
         </div>
 
-        <!-- Glassmorphic Login Form -->
-        <div class="glass-card rounded-3xl p-8 border border-white/5 relative overflow-hidden">
-            <!-- Decorative border glow -->
-            <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-coffee-400/40 to-transparent"></div>
+        <!-- Card -->
+        <div class="glass rounded-3xl p-8 relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-coffee-400/50 to-transparent"></div>
+            <div class="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-coffee-800/40 to-transparent"></div>
 
-            <h2 class="text-xl font-semibold text-white mb-6 text-center">Masuk ke Dashboard</h2>
+            <div class="mb-6">
+                <h2 class="text-lg font-bold text-white">Masuk ke Dashboard</h2>
+                <p class="text-xs text-coffee-400/50 mt-1">Masukkan kredensial akun Anda untuk mengakses sistem.</p>
+            </div>
 
-            <!-- Success or Error Alert -->
-            <div th:if="${error}" class="mb-5 flex items-start bg-red-950/40 border border-red-500/30 text-red-200 px-4 py-3 rounded-2xl text-sm gap-3 animate-headShake">
-                <i class="fa-solid fa-circle-exclamation mt-0.5 text-red-400"></i>
+            <!-- Alerts -->
+            <div th:if="${error}" class="mb-5 flex items-start bg-red-950/40 border border-red-500/30 text-red-200 px-4 py-3 rounded-xl text-sm gap-3">
+                <i class="fa-solid fa-circle-exclamation mt-0.5 text-red-400 shrink-0"></i>
                 <span th:text="${error}">Username atau password salah!</span>
             </div>
-            
-            <div th:if="${success}" class="mb-5 flex items-start bg-green-950/40 border border-green-500/30 text-green-200 px-4 py-3 rounded-2xl text-sm gap-3">
-                <i class="fa-solid fa-circle-check mt-0.5 text-green-400"></i>
+            <div th:if="${success}" class="mb-5 flex items-start bg-green-950/40 border border-green-500/30 text-green-200 px-4 py-3 rounded-xl text-sm gap-3">
+                <i class="fa-solid fa-circle-check mt-0.5 text-green-400 shrink-0"></i>
                 <span th:text="${success}">Berhasil!</span>
             </div>
 
-            <form th:action="@{/login}" method="POST" class="space-y-6">
-                <!-- Username input -->
-                <div class="space-y-2">
-                    <label for="username" class="block text-sm font-medium text-coffee-200">Username</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-coffee-400">
-                            <i class="fa-regular fa-user"></i>
-                        </div>
-                        <input type="text" id="username" name="username" required autocomplete="off"
-                            class="block w-full pl-11 pr-4 py-3.5 bg-coffee-950/60 border border-white/10 rounded-2xl text-white placeholder-coffee-600 focus:outline-none focus:border-coffee-400 focus:ring-1 focus:ring-coffee-400/30 transition duration-300 text-sm"
-                            placeholder="Masukkan username Anda">
-                    </div>
+            <form th:action="@{/login}" method="POST" class="space-y-5">
+                <!-- Username -->
+                <div class="space-y-1.5">
+                    <label for="username" class="block text-xs font-semibold text-coffee-300 uppercase tracking-wider">
+                        <i class="fa-regular fa-circle-user mr-1.5 text-coffee-400"></i>Username
+                    </label>
+                    <input type="text" id="username" name="username" required autocomplete="off"
+                        class="input-field block w-full px-4 py-3.5 rounded-xl text-white text-sm placeholder-coffee-600"
+                        placeholder="Masukkan username Anda">
                 </div>
 
-                <!-- Password input -->
-                <div class="space-y-2">
-                    <div class="flex justify-between items-center">
-                        <label for="password" class="block text-sm font-medium text-coffee-200">Password</label>
-                    </div>
+                <!-- Password -->
+                <div class="space-y-1.5">
+                    <label for="password" class="block text-xs font-semibold text-coffee-300 uppercase tracking-wider">
+                        <i class="fa-solid fa-shield-halved mr-1.5 text-coffee-400"></i>Password
+                    </label>
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-coffee-400">
-                            <i class="fa-solid fa-lock"></i>
-                        </div>
                         <input type="password" id="password" name="password" required
-                            class="block w-full pl-11 pr-4 py-3.5 bg-coffee-950/60 border border-white/10 rounded-2xl text-white placeholder-coffee-600 focus:outline-none focus:border-coffee-400 focus:ring-1 focus:ring-coffee-400/30 transition duration-300 text-sm"
+                            class="input-field block w-full px-4 py-3.5 pr-12 rounded-xl text-white text-sm placeholder-coffee-600"
                             placeholder="Masukkan password Anda">
+                        <button type="button" id="togglePwd" class="absolute inset-y-0 right-0 pr-4 flex items-center text-coffee-500 hover:text-coffee-300 transition">
+                            <i class="fa-regular fa-eye" id="eyeIcon"></i>
+                        </button>
                     </div>
                 </div>
 
-                <!-- Submit Button -->
-                <button type="submit" 
-                    class="glow-button w-full py-4 px-6 bg-gradient-to-r from-coffee-500 to-coffee-700 hover:from-coffee-400 hover:to-coffee-600 text-coffee-950 font-bold text-base rounded-2xl transition duration-300 flex items-center justify-center gap-2">
-                    <span>Sign In</span>
-                    <i class="fa-solid fa-arrow-right text-sm"></i>
+                <!-- Submit -->
+                <button type="submit"
+                    class="btn-glow w-full py-4 px-6 bg-gradient-to-r from-coffee-500 via-coffee-600 to-coffee-700 hover:from-coffee-400 hover:to-coffee-600 text-coffee-100 font-bold text-sm rounded-2xl flex items-center justify-center gap-2.5 mt-2">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>Masuk ke Sistem</span>
                 </button>
             </form>
-            
-            <!-- Default Credentials Help Drawer -->
-            <div class="mt-8 pt-6 border-t border-white/5 text-center">
-                <p class="text-xs text-coffee-400/50">Info Login Default (DataSeeder):</p>
-                <div class="flex justify-center gap-4 mt-2 text-xs font-semibold text-coffee-300/70 bg-coffee-950/30 py-2 rounded-xl border border-white/[0.02]">
-                    <span>User: <code class="text-coffee-400">admin</code></span>
-                    <span>Pass: <code class="text-coffee-400">admin123</code></span>
+
+            <!-- Default credentials hint -->
+            <div class="mt-7 pt-5 border-t border-white/5">
+                <p class="text-[10px] text-coffee-500/60 text-center mb-2 uppercase tracking-wider font-semibold">Info Login Default (Seeder)</p>
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="bg-coffee-950/50 border border-white/5 rounded-lg px-3 py-2 text-center">
+                        <p class="text-[9px] text-coffee-500 uppercase font-bold tracking-wider mb-0.5">Username</p>
+                        <code class="text-xs text-coffee-300 font-bold">admin</code>
+                    </div>
+                    <div class="bg-coffee-950/50 border border-white/5 rounded-lg px-3 py-2 text-center">
+                        <p class="text-[9px] text-coffee-500 uppercase font-bold tracking-wider mb-0.5">Password</p>
+                        <code class="text-xs text-coffee-300 font-bold">admin123</code>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <p class="text-center text-xs text-coffee-500/40 mt-8">
-            &copy; 2026 Arabica.co. All rights reserved.
+
+        <p class="text-center text-[10px] text-coffee-600/50 mt-6">
+            &copy; 2026 Arabica.co &mdash; All rights reserved.
         </p>
     </div>
 
-    <!-- Register Service Worker -->
     <script>
+        // Toggle password visibility
+        const togglePwd = document.getElementById('togglePwd');
+        const pwd = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
+        togglePwd.addEventListener('click', () => {
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                pwd.type = 'password';
+                eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        });
+
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/service-worker.js')
-                    .then(reg => console.log('ServiceWorker registered:', reg))
-                    .catch(err => console.error('ServiceWorker registration failed:', err));
+                    .catch(err => console.error('SW error:', err));
             });
         }
     </script>
