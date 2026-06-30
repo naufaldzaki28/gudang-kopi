@@ -1,8 +1,9 @@
 package com.kopi.gudang.controller;
 
-import com.kopi.gudang.entity.User;
-import com.kopi.gudang.repository.UserRepository;
-import jakarta.servlet.http.HttpSession;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,9 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.MessageDigest;
-import java.math.BigInteger;
-import java.util.List;
+import com.kopi.gudang.entity.User;
+import com.kopi.gudang.repository.UserRepository;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
@@ -111,5 +113,53 @@ public class UserController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // 4. Menampilkan Halaman Edit Hak Akses (Role)
+    @GetMapping("/users/edit/{id}")
+    public String showEditUserForm(@PathVariable Long id, Model model, HttpSession session,
+            RedirectAttributes redirectAttrs) {
+        User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null || !"ADMIN".equalsIgnoreCase(currentUser.getRole())) {
+            return "redirect:/";
+        }
+
+        java.util.Optional<User> optUser = userRepository.findById(id);
+        if (optUser.isEmpty()) {
+            redirectAttrs.addFlashAttribute("error", "Data pegawai tidak ditemukan.");
+            return "redirect:/users";
+        }
+
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("userToEdit", optUser.get());
+        return "edit-user"; // Memanggil file edit-user.html
+    }
+
+    // 5. Menyimpan Perubahan Hak Akses
+    @PostMapping("/users/edit/{id}")
+    public String updateUserRole(@PathVariable Long id, @RequestParam String role, HttpSession session,
+            RedirectAttributes redirectAttrs) {
+        User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null || !"ADMIN".equalsIgnoreCase(currentUser.getRole())) {
+            return "redirect:/";
+        }
+
+        // Proteksi: Admin tidak boleh mengubah role-nya sendiri dari halaman ini
+        if (currentUser.getId().equals(id)) {
+            redirectAttrs.addFlashAttribute("error", "Ditolak! Anda tidak dapat mengubah hak akses Anda sendiri.");
+            return "redirect:/users";
+        }
+
+        java.util.Optional<User> optUser = userRepository.findById(id);
+        if (optUser.isPresent()) {
+            User existingUser = optUser.get();
+            existingUser.setRole(role.toUpperCase());
+            userRepository.save(existingUser); // Simpan perubahan ke database
+
+            redirectAttrs.addFlashAttribute("success", "Hak akses atas nama " + existingUser.getFullName()
+                    + " berhasil diubah menjadi " + role.toUpperCase());
+        }
+
+        return "redirect:/users";
     }
 }

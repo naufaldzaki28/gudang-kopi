@@ -1,0 +1,63 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0C0604" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verifikasi OTP - Arabica Warehouse</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-[#0c0604] flex items-center justify-center min-h-screen p-4 font-sans text-white"
+  >
+    <div
+      class="w-full max-w-sm bg-[#1f100a]/50 p-8 rounded-3xl border border-white/10 text-center shadow-2xl"
+    >
+      <h2 class="text-2xl font-bold mb-2">Cek Email Anda</h2>
+      <p class="text-sm text-gray-400 mb-6">
+        Kami telah mengirimkan 6 digit kode OTP ke email <br /><strong
+          class="text-white"
+          th:text="${email}"
+        ></strong>
+      </p>
+
+      <div
+        th:if="${error}"
+        class="mb-4 bg-red-900/50 text-red-300 p-3 rounded-lg text-sm text-center"
+      >
+        <span th:text="${error}"></span>
+      </div>
+
+      <form th:action="@{/verify-otp/process}" method="POST">
+        <input
+          type="text"
+          name="otpCode"
+          required
+          maxlength="6"
+          placeholder="000000"
+          class="w-full bg-[#0c0604] border border-white/10 p-4 rounded-xl text-center text-2xl tracking-widest font-mono outline-none focus:border-[#B09874] mb-6"
+        />
+
+        <button
+          type="submit"
+          class="w-full py-3.5 bg-green-700 hover:bg-green-600 font-bold rounded-xl transition"
+        >
+          Verifikasi & Aktifkan Akun
+        </button>
+      </form>
+    </div>
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/service-worker.js")
+            .then((reg) => console.log("ServiceWorker registered:", reg))
+            .catch((err) =>
+              console.error("ServiceWorker registration failed:", err),
+            );
+        });
+      }
+    </script>
+  </body>
+</html>

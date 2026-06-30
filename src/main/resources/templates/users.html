@@ -384,29 +384,41 @@
                       >STAFF</span
                     >
                   </td>
-                  <td class="p-4 pr-6 text-center">
-                    <form
-                      th:if="${user.id != currentUser.id}"
-                      th:action="@{/users/delete/{id}(id=${user.id})}"
-                      method="POST"
-                      onsubmit="
-                        return confirm('Yakin ingin mencabut akses akun ini?');
-                      "
-                      class="inline"
-                    >
-                      <button
-                        type="submit"
-                        class="w-8 h-8 rounded-lg bg-red-950/40 text-red-400 hover:bg-red-900/60 transition flex items-center justify-center border border-red-900/50"
-                        title="Hapus Akun"
+                  <td class="p-4 pr-6">
+                    <div class="flex items-center justify-center gap-2">
+                      <form
+                        th:if="${user.id != currentUser.id}"
+                        th:action="@{/users/delete/{id}(id=${user.id})}"
+                        method="POST"
+                        onsubmit="
+                          return confirm(
+                            'Yakin ingin mencabut akses akun ini?',
+                          );
+                        "
+                        class="m-0"
                       >
-                        <i class="fa-solid fa-trash-can"></i>
-                      </button>
-                    </form>
-                    <span
-                      th:if="${user.id == currentUser.id}"
-                      class="text-[10px] text-gray-500 italic"
-                      >Sedang digunakan</span
-                    >
+                        <button
+                          type="submit"
+                          class="w-8 h-8 rounded-lg bg-red-950/40 text-red-400 hover:bg-red-900/60 transition flex items-center justify-center border border-red-900/50"
+                          title="Hapus Akun"
+                        >
+                          <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                      </form>
+
+                      <a
+                        th:href="@{/users/edit/{id}(id=${user.id})}"
+                        class="bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white px-3 py-1.5 rounded text-sm transition-colors duration-200"
+                      >
+                        Ubah Akses
+                      </a>
+
+                      <span
+                        th:if="${user.id == currentUser.id}"
+                        class="text-[10px] text-gray-500 italic ml-2"
+                        >Sedang digunakan</span
+                      >
+                    </div>
                   </td>
                 </tr>
               </tbody>
