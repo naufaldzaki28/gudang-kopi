@@ -14,7 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
-                .addPathPatterns("/**") // Protect all endpoints by default
+                .addPathPatterns("/**")
                 .excludePathPatterns(
                         "/login",
                         "/logout",
@@ -25,7 +25,14 @@ public class WebConfig implements WebMvcConfigurer {
                         "/webjars/**",
                         "/error",
                         "/manifest.json",
-                        "/service-worker.js"
-                );
+                        "/service-worker.js",
+                        "/register",
+                        "/register/process",
+                        "/verify-otp",
+                        "/verify-otp/process",
+                        "/forgot-password",
+                        "/forgot-password/process",
+                        "/reset-password",
+                        "/reset-password/process");
     }
 }
